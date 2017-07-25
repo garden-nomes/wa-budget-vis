@@ -35,7 +35,10 @@ function display(d) {
 
   const labels = textLayer
     .selectAll('.label')
-    .data(newRoot.children.filter(d => d.value > 0), d => d.data.name);
+    .data(
+      newRoot.children.filter(d => d.value / d.parent.value > 0.01),
+      d => d.data.name
+    );
 
   labels.exit().transition(fadeStart).style('opacity', 0).remove();
 
