@@ -35,13 +35,13 @@ body {
   font-weight: 300;
 }
 
-.grouping rect {
+.overlay rect {
   fill: rgba(255, 255, 255, 0.2);
   visibility: hidden;
   pointer-events: all;
   cursor: pointer;
 }
 
-.grouping:hover rect {
+.overlay:hover rect {
   visibility: visible;
 }

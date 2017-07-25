@@ -35,7 +35,7 @@ function display(d) {
 
   const labels = textLayer
     .selectAll('.label')
-    .data(newRoot.children, d => d.data.name);
+    .data(newRoot.children.filter(d => d.value > 0), d => d.data.name);
 
   labels.exit().transition(fadeStart).style('opacity', 0).remove();
 
@@ -64,7 +64,7 @@ function display(d) {
 
   const cells = cellLayer
     .selectAll('.cell')
-    .data(newRoot.leaves(), d => d.data.name);
+    .data(newRoot.leaves().filter(d => d.value > 0), d => d.data.name);
 
   cells.exit().transition(fadeStart).style('opacity', 0).remove();
 
@@ -88,26 +88,31 @@ function display(d) {
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0);
 
-  const groupings = overlayLayer
-    .selectAll('.grouping')
-    .data(newRoot.descendants().filter(d => d.depth === 1), d => d.data.name);
+  const overlays = overlayLayer
+    .selectAll('.overlay')
+    .data(
+      newRoot.descendants().filter(d => d.depth === 1 && d.value > 0),
+      d => d.data.name
+    );
 
-  groupings
+  const overlay = overlays
     .enter()
     .append('g')
-    .attr('class', 'grouping')
+    .attr('class', 'overlay')
     .attr('transform', d => `translate(${d.x0},${d.y0})`)
     .append('rect')
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0)
-    .on('click', d => (zoomed ? display(root) : display(d)))
-    .style('opacity', 0)
-    .transition(fadeEnd)
-    .style('opacity', 1);
+    .on('click', d => (zoomed ? display(root) : display(d)));
 
-  groupings.exit().transition(fadeStart).style('opacity', 0).remove();
+  overlay.style('opacity', 0).transition(fadeEnd).style('opacity', 1);
+  overlay
+    .append('title')
+    .text(d => `${d.data.name}\n${formatMoney(d.value, { precision: 0 })}`);
 
-  groupings
+  overlays.exit().transition(fadeStart).style('opacity', 0).remove();
+
+  overlays
     .transition(reshape)
     .attr('transform', d => `translate(${d.x0},${d.y0})`)
     .select('rect')
