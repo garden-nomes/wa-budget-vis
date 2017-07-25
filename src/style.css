@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,700,800');
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Open Sans', 'Helvetica Neue', helvetica, arial, sans-serif;
+}
+
+#wrap {
+  max-width: 960px;
+  margin: 1em auto;
+}
+
+#heading {
+  margin-bottom: 0.5em;
+  text-align: center;
+}
+
+#attribution {
+  font-size: .8em;
+}
+
+.label text {
+  font: 14px 'Open Sans', 'Helvetica Neue', helvetica, arial, sans-serif;
+  fill: #fff;
+  font-weight: 700;
+}
+
+.label .funding {
+  font-size: 12px;
+  fill: #ddd;
+  font-weight: 300;
+}
+
+.grouping rect {
+  fill: rgba(255, 255, 255, 0.2);
+  visibility: hidden;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.grouping:hover rect {
+  visibility: visible;
+}
