@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { formatMoney } from 'accounting';
+import numeral from 'numeral';
 import budgets from '../data/budgets.json';
 import './style.css';
 
@@ -19,7 +19,7 @@ const overlayLayer = svg.append('g');
 
 const root = d3
   .hierarchy(budgets)
-  .sum(d => d.funding)
+  .sum(d => d.funding * 1000)
   .sort((a, b) => b.value - a.value);
 
 const treemap = d3.treemap().size([width, height]).padding(1);
@@ -56,7 +56,7 @@ function display(d) {
     .attr('x', '0')
     .attr('dx', '4px')
     .attr('dy', '1.2em')
-    .text(d => formatMoney(d.value, { precision: 0 }));
+    .text(d => numeral(d.value).format('($0.00 a)'));
 
   labels
     .transition(reshape)
@@ -108,7 +108,7 @@ function display(d) {
   overlay.style('opacity', 0).transition(fadeEnd).style('opacity', 1);
   overlay
     .append('title')
-    .text(d => `${d.data.name}\n${formatMoney(d.value, { precision: 0 })}`);
+    .text(d => `${d.data.name}\n${numeral(d.value).format('$0,0')}`);
 
   overlays.exit().transition(fadeStart).style('opacity', 0).remove();
 
