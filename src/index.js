@@ -25,20 +25,20 @@ const root = d3
 const treemap = d3.treemap().size([width, height]).padding(1);
 display(root);
 
-function display(d) {
-  const newRoot = d.copy();
-  treemap(newRoot);
+function display(node) {
+  const newNode = node.copy();
+  treemap(newNode);
 
-  const reshape = d3.transition().duration(500);
+  const reshape = d3.transition().duration(750);
   const fadeStart = d3.transition().duration(250);
-  const fadeEnd = d3.transition().delay(400).duration(250);
+  const fadeEnd = d3.transition().delay(500).duration(250);
 
-  d3.select('.heading').select('h1').text(d.data.name);
+  d3.select('.heading').select('h1').text(node.data.name);
 
   const labels = textLayer
     .selectAll('.label')
     .data(
-      newRoot.children.filter(d => d.value / d.parent.value > 0.01),
+      newNode.children.filter(d => d.value / d.parent.value > 0.01),
       d => d.data.name
     );
 
@@ -69,7 +69,7 @@ function display(d) {
 
   const cells = cellLayer
     .selectAll('.cell')
-    .data(newRoot.leaves().filter(d => d.value > 0), d => d.data.name);
+    .data(newNode.leaves().filter(d => d.value > 0), d => d.data.name);
 
   cells.exit().transition(fadeStart).style('opacity', 0).remove();
 
@@ -96,7 +96,7 @@ function display(d) {
   const overlays = overlayLayer
     .selectAll('.overlay')
     .data(
-      newRoot.descendants().filter(d => d.depth === 1 && d.value > 0),
+      newNode.descendants().filter(d => d.depth === 1 && d.value > 0),
       d => d.data.name
     );
 
@@ -113,7 +113,7 @@ function display(d) {
   overlay.style('opacity', 0).transition(fadeEnd).style('opacity', 1);
   overlay
     .append('title')
-    .text(d => `${d.data.name}\n${numeral(d.value).format('$0,0')}`);
+    .text(d => `${d.data.name}\n${numeral(d.value).format('$0.0 a')}`);
 
   overlays.exit().transition(fadeStart).style('opacity', 0).remove();
 
@@ -124,7 +124,25 @@ function display(d) {
     .attr('width', d => d.x1 - d.x0)
     .attr('height', d => d.y1 - d.y0);
 
-  if (d === root) {
+  overlay
+    .filter(d => d.value / d.parent.value <= 0.01)
+    .on('mouseover', d => {
+      const popup = d3
+        .select('.popup')
+        .style('display', 'block')
+        .style('left', (d.x0 + d.x1) / 2 + 'px')
+        .style('bottom', height - d.y0 + 'px');
+
+      popup.select('.popup--name').text(d.data.name);
+      popup.select('.popup--funding').text(numeral(d.value).format('$0.0 a'));
+    })
+    .on('mouseout', d => {
+      d3.select('.popup').style('display', 'none');
+    });
+
+  d3.select('.popup').style('display', 'none');
+
+  if (node === root) {
     zoomed = false;
   } else {
     zoomed = true;

@@ -32,11 +32,56 @@ h1 {
   font-weight: 400;
 }
 
+#chart {
+  position: relative;
+}
+
 .footer {
   font-size: .8em;
 
   display: flex;
   justify-content: space-between;
+}
+
+.popup {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+
+  background: #000;
+  color: #fff;
+
+  width: 200px;
+  padding: 0.5em;
+
+  margin-left: -100px;
+  margin-bottom: 4px;
+
+  text-align: center;
+}
+
+.popup::after {
+  content: '';
+
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+
+  margin-left: -5px;
+
+  background: #000;
+}
+
+.popup--name {
+  font-weight: bold;
+}
+
+.popup--funding {
+  color: #ddd;
 }
 
 .label text {
