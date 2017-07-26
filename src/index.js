@@ -29,9 +29,9 @@ function display(d) {
   const newRoot = d.copy();
   treemap(newRoot);
 
-  const reshape = d3.transition().duration(600);
-  const fadeStart = d3.transition().duration(200);
-  const fadeEnd = d3.transition().delay(400).duration(200);
+  const reshape = d3.transition().duration(500);
+  const fadeStart = d3.transition().duration(250);
+  const fadeEnd = d3.transition().delay(400).duration(250);
 
   const labels = textLayer
     .selectAll('.label')
