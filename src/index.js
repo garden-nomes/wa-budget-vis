@@ -33,6 +33,8 @@ function display(d) {
   const fadeStart = d3.transition().duration(250);
   const fadeEnd = d3.transition().delay(400).duration(250);
 
+  d3.select('.heading').select('h1').text(d.data.name);
+
   const labels = textLayer
     .selectAll('.label')
     .data(

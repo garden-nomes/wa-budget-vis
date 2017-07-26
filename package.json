@@ -6,7 +6,7 @@
   "author": "noaner <noahbweiner@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "webpack",
+    "build": "./bin/transform.rb -i ./data/budgets.csv -o ./data/budgets.json && webpack",
     "deploy": "yarn build && gh-pages -d dist",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open"

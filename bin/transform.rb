@@ -42,7 +42,7 @@ class Transform
   end
 
   def data
-    @data ||= { name: '2017 Operating Budget', children: [] }
+    @data ||= { name: 'Washington State 2017-19 Operating Budget', children: [] }
   end
 
   def insert_entry(entry)
