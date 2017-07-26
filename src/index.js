@@ -59,7 +59,7 @@ function display(d) {
     .attr('x', '0')
     .attr('dx', '4px')
     .attr('dy', '1.2em')
-    .text(d => numeral(d.value).format('($0.00 a)'));
+    .text(d => numeral(d.value).format('($0.0 a)'));
 
   labels
     .transition(reshape)
