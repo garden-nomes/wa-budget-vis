@@ -1,4 +1,7 @@
-import * as d3 from 'd3';
+import { select, selectAll } from 'd3-selection';
+import { hierarchy, treemap } from 'd3-hierarchy';
+import { transition } from 'd3-transition';
+import { scaleOrdinal, schemeCategory10 } from 'd3-scale';
 import numeral from 'numeral';
 import budgets from '../data/budgets.json';
 import './style.css';
@@ -8,32 +11,32 @@ const width = 960,
 
 let zoomed = false;
 
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+const color = scaleOrdinal(schemeCategory10);
 
-const chart = d3.select('#chart');
+const chart = select('#chart');
 const svg = chart.append('svg').attr('width', width).attr('height', height);
 
 const cellLayer = svg.append('g');
 const textLayer = svg.append('g');
 const overlayLayer = svg.append('g');
 
-const root = d3
-  .hierarchy(budgets)
+const root = hierarchy(budgets)
   .sum(d => d.funding * 1000)
   .sort((a, b) => b.value - a.value);
 
-const treemap = d3.treemap().size([width, height]).padding(1);
+const treemapFunc = treemap().size([width, height]).padding(1);
+
 display(root);
 
 function display(node) {
   const newNode = node.copy();
-  treemap(newNode);
+  treemapFunc(newNode);
 
-  const reshape = d3.transition().duration(750);
-  const fadeStart = d3.transition().duration(250);
-  const fadeEnd = d3.transition().delay(500).duration(250);
+  const reshape = transition().duration(750);
+  const fadeStart = transition().duration(250);
+  const fadeEnd = transition().delay(500).duration(250);
 
-  d3.select('.heading').select('h1').text(node.data.name);
+  select('.heading').select('h1').text(node.data.name);
 
   const labels = textLayer
     .selectAll('.label')
@@ -127,8 +130,7 @@ function display(node) {
   overlay
     .filter(d => d.value / d.parent.value <= 0.01)
     .on('mouseover', d => {
-      const popup = d3
-        .select('.popup')
+      const popup = select('.popup')
         .style('display', 'block')
         .style('left', (d.x0 + d.x1) / 2 + 'px')
         .style('bottom', height - d.y0 + 'px');
@@ -137,10 +139,10 @@ function display(node) {
       popup.select('.popup--funding').text(numeral(d.value).format('$0.0 a'));
     })
     .on('mouseout', d => {
-      d3.select('.popup').style('display', 'none');
+      select('.popup').style('display', 'none');
     });
 
-  d3.select('.popup').style('display', 'none');
+  select('.popup').style('display', 'none');
 
   if (node === root) {
     zoomed = false;
@@ -151,7 +153,7 @@ function display(node) {
 
 function wrap(label) {
   label.each(function(d) {
-    const text = d3.select(this),
+    const text = select(this),
       width = d.x1 - d.x0,
       words = text.text().split(/\s+/).reverse(),
       y = text.attr('y'),
